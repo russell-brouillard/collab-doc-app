@@ -26,7 +26,7 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
     }),
     UsersModule,
-    // ... other modules
+
   ],
   controllers: [AppController],
   providers: [AppService],
