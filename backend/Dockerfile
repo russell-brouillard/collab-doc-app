@@ -1,43 +1,18 @@
-# backend/Dockerfile
+FROM node:20-alpine
 
-# Stage 1: Build
-FROM node:16-alpine AS builder
-
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package files and install all dependencies (including devDependencies)
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+RUN npm i -g @nestjs/cli
+
+# Copy the rest of the application code (This will be overwritten by the volume in dev mode, but ensures node_modules are present)
 COPY . .
 
-# Build the application
-RUN npm run build
-
-# Stage 2: Run
-FROM node:16-alpine
-
-# Set working directory
-WORKDIR /app
-
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install only production dependencies
-RUN npm install --only=production
-
-# Copy built files from the builder stage
-COPY --from=builder /app/dist ./dist
-
-# Expose the desired port (default NestJS port is 3000)
+# Expose Nest's default port
 EXPOSE 3000
 
-# Define environment variable for production
-ENV NODE_ENV=production
-
-# Start the application
-CMD ["node", "dist/main.js"]
+# The command will be overridden by docker-compose with `npm run start:dev`
