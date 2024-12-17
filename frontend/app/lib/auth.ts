@@ -1,43 +1,45 @@
-import CredentialsProvider from "next-auth/providers/credentials";
-import { NextAuthConfig } from "next-auth";
+// frontend/app/lib/auth.ts
 
-export const authConfig = {
+import Auth0Provider from "next-auth/providers/auth0";
+import { NextAuthOptions } from "next-auth";
+
+// Define the shape of your user (optional)
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+  image?: string;
+}
+
+console.log(process.env.AUTH0_CLIENT_ID);
+console.log(process.env.AUTH0_CLIENT_SECRET);
+console.log(process.env.AUTH0_ISSUER);
+console.log(process.env.NEXTAUTH_SECRET);
+
+export const authConfig: NextAuthOptions = {
   providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        // Replace this logic with your own authentication against a DB or another backend
-        if (
-          credentials?.email === "user@example.com" &&
-          credentials?.password === "password123"
-        ) {
-          return { id: "1", email: credentials.email };
-        }
-        return null;
-      },
+    Auth0Provider({
+      clientId: process.env.AUTH0_CLIENT_ID!,
+      clientSecret: process.env.AUTH0_CLIENT_SECRET!,
+      issuer: process.env.AUTH0_ISSUER!, // Must be an absolute URL
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
+    async jwt({ token, account }) {
+      if (account) {
+        token.accessToken = account.access_token;
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id as string;
-        session.user.email = token.email as string;
+        session.user.accessToken = token.accessToken as string;
       }
       return session;
     },
   },
   pages: {
-    signIn: "/login",
+    signIn: "/login", // Custom sign-in page
   },
-} satisfies NextAuthConfig;
+  secret: process.env.NEXTAUTH_SECRET, // Ensure this is set
+};
