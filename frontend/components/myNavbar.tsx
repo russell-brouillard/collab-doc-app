@@ -7,122 +7,62 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Link,
-  DropdownItem,
-  DropdownTrigger,
-  DropdownMenu,
-  Dropdown,
-  Avatar,
+  Link as NextUILink,
 } from "@nextui-org/react";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
-export const AcmeLogo = () => {
-  return (
-    <svg fill="none" height="36" viewBox="0 0 32 32" width="36">
-      <path
-        clipRule="evenodd"
-        d="M17.6482 10.1305L15.8785 7.02583L7.02979 22.5499H10.5278L17.6482 10.1305ZM19.8798 14.0457L18.11 17.1983L19.394 19.4511H16.8453L15.1056 22.5499H24.7272L19.8798 14.0457Z"
-        fill="currentColor"
-        fillRule="evenodd"
-      />
-    </svg>
-  );
-};
 
 export default function MyNavbar() {
-  // Handle loading state
-  if (status === "loading") {
-    return (
-      <Navbar isBordered variant="sticky">
-        <NavbarBrand>
-          <AcmeLogo />
-          <p className="font-bold text-inherit">ACME</p>
-        </NavbarBrand>
-        <NavbarContent className="hidden sm:flex gap-4" justify="center">
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem isActive>
-            <Link aria-current="page" color="secondary" href="#">
-              Customers
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Integrations
-            </Link>
-          </NavbarItem>
-        </NavbarContent>
-        <NavbarContent as="div" justify="end">
-          <Avatar
-            isBordered
-            as="button"
-            className="transition-transform"
-            color="secondary"
-            name="Loading..."
-            size="sm"
-            src=""
-          />
-        </NavbarContent>
-      </Navbar>
-    );
-  }
-
   return (
     <Navbar isBordered variant="sticky">
+      {/* Brand Section */}
       <NavbarBrand>
-        <AcmeLogo />
-        <p className="font-bold text-inherit">ACME</p>
+
+        <p className="font-bold text-inherit ml-2">ACME</p>
       </NavbarBrand>
 
+      {/* Navigation Links */}
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <NextUILink color="foreground" href="#">
             Features
-          </Link>
+          </NextUILink>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link aria-current="page" color="secondary" href="#">
+          <NextUILink aria-current="page" color="secondary" href="#">
             Customers
-          </Link>
+          </NextUILink>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <NextUILink color="foreground" href="#">
             Integrations
-          </Link>
+          </NextUILink>
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent as="div" justify="end">
-        <Dropdown placement="bottom-end">
-          <DropdownTrigger>
-            <Avatar
-              isBordered
-              as="button"
-              className="transition-transform"
-              color="secondary"
-              name={"User"}
-              size="sm"
-              src={"https://i.pravatar.cc/150?u=a042581f4e29026704d"}
-            />
-          </DropdownTrigger>
-          <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">email</p>
-            </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
-            <DropdownItem key="team_settings">Team Settings</DropdownItem>
-            <DropdownItem key="analytics">Analytics</DropdownItem>
-            <DropdownItem key="system">System</DropdownItem>
-            <DropdownItem key="configurations">Configurations</DropdownItem>
-            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-            <DropdownItem key="logout" color="danger" onPress={() => signOut()}>
-              Log Out
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+      {/* Authentication Section */}
+      <NavbarContent as="div" justify="end" className="flex items-center gap-4">
+        {/* Show Sign In button when signed out */}
+        <SignedOut>
+          <SignInButton mode="modal">
+            <button className="px-4 py-2 bg-blue-500 text-white rounded transition-colors hover:bg-blue-600">
+              Sign In
+            </button>
+          </SignInButton>
+        </SignedOut>
+
+        {/* Show User Button when signed in */}
+        <SignedIn>
+          <UserButton
+            appearance={{
+              elements: {
+                userButtonAvatarBox: "w-8 h-8", // Custom avatar size
+              },
+            }}
+            userProfileMode="navigation" // Dropdown navigation
+            userProfileUrl="/profile" // Profile page route
+          />
+        </SignedIn>
       </NavbarContent>
     </Navbar>
   );

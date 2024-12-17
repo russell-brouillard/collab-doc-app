@@ -2,8 +2,8 @@
 
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@nextui-org/link";
 import clsx from "clsx";
+import { ClerkProvider } from "@clerk/nextjs";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
@@ -34,30 +34,40 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en">
-      <head />
-      <body
-        className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
-        <div className="relative flex flex-col h-screen">
-          <MyNavbar />
-          <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-            {children}
-          </main>
-          <footer className="w-full flex items-center justify-center py-3">
-            <Link
-              isExternal
-              aria-label="Twitter"
-              href={siteConfig.links.twitter}
-            >
-              <TwitterIcon className="text-default-500" />
-            </Link>
-          </footer>
-        </div>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html suppressHydrationWarning lang="en">
+        <head />
+        <body
+          className={clsx(
+            "min-h-screen bg-background font-sans antialiased",
+            fontSans.variable
+          )}
+        >
+          <div className="relative flex flex-col min-h-screen">
+            {/* Navigation Bar */}
+            <MyNavbar />
+
+            {/* Main Content */}
+            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
+              {children}
+            </main>
+
+            {/* Footer */}
+            <footer className="w-full flex items-center justify-center py-3">
+              <a
+                aria-label="Twitter"
+                className="flex items-center"
+                href={siteConfig.links.twitter}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <TwitterIcon className="text-default-500 w-6 h-6" />
+                <span className="sr-only">Twitter</span>
+              </a>
+            </footer>
+          </div>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
