@@ -1,17 +1,41 @@
-import { Link } from "@nextui-org/link";
-import { Snippet } from "@nextui-org/snippet";
-import { Code } from "@nextui-org/code";
-import { button as buttonStyles } from "@nextui-org/theme";
+"use client";
 
-import { siteConfig } from "@/config/site";
+import { Snippet } from "@nextui-org/snippet";
+import { SignUpButton, useUser, useAuth } from "@clerk/nextjs";
+import { useEffect } from "react";
+
 import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
 
 export default function Home() {
+  const { user } = useUser();
+  const auth = useAuth();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log("auth.getToken:", await auth.getToken());
+        const res = await fetch("http://localhost:3001/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${await auth.getToken()}`,
+          },
+        });
+
+        console.log(
+          "Server message:",
+          res.ok ? await res.text() : res.statusText
+        );
+      } catch (error) {
+        console.error("Error fetching server message:", error);
+      }
+    };
+
+    fetchData();
+  }, [user]);
+
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="inline-block max-w-xl text-center justify-center">
-       
         <span className={title({ color: "violet" })}>beautiful&nbsp;</span>
         <br />
         <span className={title()}>
@@ -22,32 +46,10 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex gap-3">
-        <Link
-          isExternal
-          className={buttonStyles({
-            color: "primary",
-            radius: "full",
-            variant: "shadow",
-          })}
-          href={siteConfig.links.docs}
-        >
-          Documentation
-        </Link>
-        <Link
-          isExternal
-          className={buttonStyles({ variant: "bordered", radius: "full" })}
-          href={siteConfig.links.github}
-        >
-          <GithubIcon size={20} />
-          GitHub
-        </Link>
-      </div>
-
       <div className="mt-8">
         <Snippet hideCopyButton hideSymbol variant="bordered">
           <span>
-            Get started by editing <Code color="primary">app/page.tsx</Code>
+            <SignUpButton />
           </span>
         </Snippet>
       </div>

@@ -3,37 +3,52 @@
 "use client";
 
 import {
+  Avatar,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
   Link as NextUILink,
 } from "@nextui-org/react";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import {
+  SignInButton,
+  SignOutButton,
+  SignedIn,
+  SignedOut,
+  useUser,
+} from "@clerk/nextjs";
 
 export default function MyNavbar() {
+  const { user } = useUser();
+
   return (
-    <Navbar isBordered variant="sticky">
+    <Navbar isBordered>
       {/* Brand Section */}
       <NavbarBrand>
-        <p className="font-bold text-inherit ml-2">ACME</p>
+        <p className="font-bold text-inherit ml-2">
+          <a href="/">Doc-Collab</a>
+        </p>
       </NavbarBrand>
 
       {/* Navigation Links */}
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <NextUILink color="foreground" href="#">
-            Features
+          <NextUILink color="foreground" href="documents">
+            Documents
           </NextUILink>
         </NavbarItem>
         <NavbarItem isActive>
-          <NextUILink aria-current="page" color="secondary" href="#">
-            Customers
+          <NextUILink aria-current="page" color="secondary" href="edit">
+            Edit
           </NextUILink>
         </NavbarItem>
         <NavbarItem>
-          <NextUILink color="foreground" href="#">
-            Integrations
+          <NextUILink color="foreground" href="users">
+            Users
           </NextUILink>
         </NavbarItem>
       </NavbarContent>
@@ -51,15 +66,35 @@ export default function MyNavbar() {
 
         {/* Show User Button when signed in */}
         <SignedIn>
-          <UserButton
-            appearance={{
-              elements: {
-                userButtonAvatarBox: "w-8 h-8", // Custom avatar size
-              },
-            }}
-            userProfileMode="navigation" // Dropdown navigation
-            userProfileUrl="/profile" // Profile page route
-          />
+          <Dropdown placement="bottom-end">
+            <DropdownTrigger>
+              <Avatar
+                isBordered
+                as="button"
+                className="transition-transform"
+                color="secondary"
+                name={user?.fullName || "User"}
+                size="sm"
+                src={
+                  user?.imageUrl ||
+                  "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                }
+              />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownItem key="info" className="h-14 gap-2">
+                <p className="font-semibold">Signed in as</p>
+                <p className="font-semibold">{user?.fullName}</p>
+              </DropdownItem>
+              <DropdownItem key="profile" href="profile">
+                My Settings
+              </DropdownItem>
+
+              <DropdownItem key="logout" color="danger">
+                <SignOutButton />
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </SignedIn>
       </NavbarContent>
     </Navbar>
