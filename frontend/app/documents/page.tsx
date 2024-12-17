@@ -93,17 +93,22 @@ export default function Documents() {
       case "title":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
+            <p className="text-bold text-sm capitalize">{doc.title}</p>
+            <p className="text-bold text-sm capitalize text-default-400">
+              Word Doc
+            </p>
           </div>
         );
 
       case "owner":
         return (
           <User
-            avatarProps={{ radius: "lg", src: doc.avatar }}
-            description={doc.email}
-            name={cellValue}
-          />
+            avatarProps={{ radius: "lg", src: doc.user.imageUrl }}
+            description={doc.user.emailAddresses?.[0].emailAddress}
+            name={`${doc.user.firstName} ${doc.user.lastName}`}
+          >
+            {doc.user.emailAddresses?.[0].emailAddress}
+          </User>
         );
 
       case "actions":

@@ -18,6 +18,9 @@ export class CollabDocument {
 
   @Prop({ required: true })
   owner: string;
+
+  @Prop({ type: Object, default: {} })
+  user: Record<string, any>;
 }
 
 export const DocumentSchema = SchemaFactory.createForClass(CollabDocument);
