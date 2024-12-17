@@ -1,32 +1,21 @@
+import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthConfig } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-
-// Define the shape of your user
-export interface User {
-  id: string;
-  email: string;
-  name?: string;
-}
 
 export const authConfig = {
   providers: [
-    Credentials({
+    CredentialsProvider({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // IMPORTANT: Replace this with your actual authentication logic
-        // This is a placeholder - you should verify credentials against your database
+        // Replace this logic with your own authentication against a DB or another backend
         if (
-          credentials.email === "user@example.com" &&
-          credentials.password === "password123"
+          credentials?.email === "user@example.com" &&
+          credentials?.password === "password123"
         ) {
-          return {
-            id: "1",
-            email: credentials.email as string,
-          };
+          return { id: "1", email: credentials.email };
         }
         return null;
       },

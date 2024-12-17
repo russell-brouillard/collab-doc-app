@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 
 import { authConfig } from "./auth";
 
-
 export async function protectedRoute() {
   const session = await getServerSession(authConfig);
 
