@@ -58,11 +58,15 @@ export default function Documents() {
   const handleAddDocument = async () => {
     try {
       const token = await getToken();
+
+      console.log("Adding new document...");
+      console.log("User:", user);
       const newDocument = {
         title: "New Document",
         content: "Document content goes here.",
         owner: user?.id,
         collaborators: [],
+        user: user,
       };
 
       const res = await fetch(API_URL, {
