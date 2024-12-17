@@ -9,9 +9,7 @@ import {
   TableRow,
   TableCell,
   User,
-  Chip,
   Tooltip,
-  ChipProps,
   Button,
 } from "@nextui-org/react";
 
@@ -53,8 +51,7 @@ export const PlusIcon = ({
 export const columns = [
   { name: "NAME", uid: "name" },
   { name: "OWNER", uid: "owner" },
-
-  { name: "ACTIONS", uid: "actions" },
+  { name: "ACTIONS", uid: "actions", align: "end" },
 ];
 
 export const users = [
@@ -285,7 +282,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="flex flex-col w-full max-w-6xl px-6 md:py-10">
+    <div className="flex flex-col w-full ">
       {/* Header Row */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-semibold">Document Management</h1>
@@ -296,10 +293,7 @@ export default function App() {
       <Table aria-label="Example table with custom cells">
         <TableHeader columns={columns}>
           {(column) => (
-            <TableColumn
-              key={column.uid}
-              align={column.uid === "actions" ? "center" : "start"}
-            >
+            <TableColumn key={column.uid} align={column.align || "start"}>
               {column.name}
             </TableColumn>
           )}
