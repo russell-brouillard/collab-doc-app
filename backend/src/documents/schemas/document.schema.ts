@@ -1,6 +1,7 @@
+// backend/src/documents/schemas/document.schema.ts
+
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
-import { User } from '../../users/schemas/user.schema';
+import { Document } from 'mongoose';
 
 export type DocumentDocument = Document & CollabDocument;
 
@@ -12,11 +13,11 @@ export class CollabDocument {
   @Prop({ required: true })
   content: string;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
-  collaborators: User[];
+  @Prop()
+  collaborators: string[];
 
-  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
-  owner: User;
+  @Prop({ required: true })
+  owner: string;
 }
 
 export const DocumentSchema = SchemaFactory.createForClass(CollabDocument);
