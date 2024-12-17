@@ -1,6 +1,6 @@
 "use client";
 
-import React, { SVGProps, useEffect } from "react";
+import React, { SVGProps, useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -8,279 +8,102 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  User,
   Tooltip,
   Button,
+  User,
 } from "@nextui-org/react";
 import { useAuth, useUser } from "@clerk/nextjs";
+
+import { DeleteIcon, EditIcon, EyeIcon, PlusIcon } from "@/components/icons";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export const PlusIcon = ({
-  size = 24,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      focusable="false"
-      height={size || height}
-      role="presentation"
-      viewBox="0 0 24 24"
-      width={size || width}
-      {...props}
-    >
-      <g
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-      >
-        <path d="M6 12h12" />
-        <path d="M12 18V6" />
-      </g>
-    </svg>
-  );
-};
+const API_URL = "http://localhost:3001/documents";
 
-export const columns = [
-  { name: "NAME", uid: "name" },
-  { name: "OWNER", uid: "owner" },
-  { name: "ACTIONS", uid: "actions", align: "end" },
-];
-
-export const users = [
-  {
-    id: 1,
-    name: "Tony Reichert",
-    role: "CEO",
-    team: "Management",
-
-    age: "29",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    email: "tony.reichert@example.com",
-  },
-  {
-    id: 2,
-    name: "Zoey Lang",
-    role: "Technical Lead",
-    team: "Development",
-
-    age: "25",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-    email: "zoey.lang@example.com",
-  },
-  {
-    id: 3,
-    name: "Jane Fisher",
-    role: "Senior Developer",
-    team: "Development",
-
-    age: "22",
-    avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-    email: "jane.fisher@example.com",
-  },
-  {
-    id: 4,
-    name: "William Howard",
-    role: "Community Manager",
-    team: "Marketing",
-
-    age: "28",
-    avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
-    email: "william.howard@example.com",
-  },
-  {
-    id: 5,
-    name: "Kristen Copper",
-    role: "Sales Manager",
-    team: "Sales",
-
-    age: "24",
-    avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
-    email: "kristen.cooper@example.com",
-  },
-];
-
-export const EyeIcon = (props: IconSvgProps) => {
+export default function Documents() {
+  const { getToken } = useAuth();
   const { user } = useUser();
-  const auth = useAuth();
+  const [documents, setDocuments] = useState<any[]>([]);
 
+  // Fetch documents on load
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("auth.getToken:", await auth.getToken());
-        const res = await fetch("http://localhost:3001/", {
+        const token = await getToken();
+        const res = await fetch(API_URL, {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${await auth.getToken()}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
-        console.log(
-          "Server message:",
-          res.ok ? await res.text() : res.statusText
-        );
+        if (res.ok) {
+          const data = await res.json();
+          setDocuments(data);
+          console.log("Fetched documents:", data);
+        } else {
+          console.error("Failed to fetch documents:", res.statusText);
+        }
       } catch (error) {
-        console.error("Error fetching server message:", error);
+        console.error("Error fetching documents:", error);
       }
     };
 
     fetchData();
-  }, [user]);
-  
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      focusable="false"
-      height="1em"
-      role="presentation"
-      viewBox="0 0 20 20"
-      width="1em"
-      {...props}
-    >
-      <path
-        d="M12.9833 10C12.9833 11.65 11.65 12.9833 10 12.9833C8.35 12.9833 7.01666 11.65 7.01666 10C7.01666 8.35 8.35 7.01666 10 7.01666C11.65 7.01666 12.9833 8.35 12.9833 10Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-      />
-      <path
-        d="M9.99999 16.8916C12.9417 16.8916 15.6833 15.1583 17.5917 12.1583C18.3417 10.9833 18.3417 9.00831 17.5917 7.83331C15.6833 4.83331 12.9417 3.09998 9.99999 3.09998C7.05833 3.09998 4.31666 4.83331 2.40833 7.83331C1.65833 9.00831 1.65833 10.9833 2.40833 12.1583C4.31666 15.1583 7.05833 16.8916 9.99999 16.8916Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-      />
-    </svg>
-  );
-};
+  }, [getToken]);
 
-export const DeleteIcon = (props: IconSvgProps) => {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      focusable="false"
-      height="1em"
-      role="presentation"
-      viewBox="0 0 20 20"
-      width="1em"
-      {...props}
-    >
-      <path
-        d="M17.5 4.98332C14.725 4.70832 11.9333 4.56665 9.15 4.56665C7.5 4.56665 5.85 4.64998 4.2 4.81665L2.5 4.98332"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-      />
-      <path
-        d="M7.08331 4.14169L7.26665 3.05002C7.39998 2.25835 7.49998 1.66669 8.90831 1.66669H11.0916C12.5 1.66669 12.6083 2.29169 12.7333 3.05835L12.9166 4.14169"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-      />
-      <path
-        d="M15.7084 7.61664L15.1667 16.0083C15.075 17.3166 15 18.3333 12.675 18.3333H7.32502C5.00002 18.3333 4.92502 17.3166 4.83335 16.0083L4.29169 7.61664"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-      />
-      <path
-        d="M8.60834 13.75H11.3833"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-      />
-      <path
-        d="M7.91669 10.4167H12.0834"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-      />
-    </svg>
-  );
-};
+  // Add new document
+  const handleAddDocument = async () => {
+    try {
+      const token = await getToken();
+      const newDocument = {
+        title: "New Document",
+        content: "Document content goes here.",
+        owner: user?.id,
+        collaborators: [],
+      };
 
-export const EditIcon = (props: IconSvgProps) => {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      focusable="false"
-      height="1em"
-      role="presentation"
-      viewBox="0 0 20 20"
-      width="1em"
-      {...props}
-    >
-      <path
-        d="M11.05 3.00002L4.20835 10.2417C3.95002 10.5167 3.70002 11.0584 3.65002 11.4334L3.34169 14.1334C3.23335 15.1084 3.93335 15.775 4.90002 15.6084L7.58335 15.15C7.95835 15.0834 8.48335 14.8084 8.74168 14.525L15.5834 7.28335C16.7667 6.03335 17.3 4.60835 15.4583 2.86668C13.625 1.14168 12.2334 1.75002 11.05 3.00002Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={1.5}
-      />
-      <path
-        d="M9.90833 4.20831C10.2667 6.50831 12.1333 8.26665 14.45 8.49998"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={1.5}
-      />
-      <path
-        d="M2.5 18.3333H17.5"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={1.5}
-      />
-    </svg>
-  );
-};
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newDocument),
+      });
 
-type User = (typeof users)[0];
+      if (res.ok) {
+        const addedDoc = await res.json();
+        setDocuments((prevDocs) => [...prevDocs, addedDoc]);
+        console.log("Document added successfully:", addedDoc);
+      } else {
+        console.error("Failed to add document:", res.statusText);
+      }
+    } catch (error) {
+      console.error("Error adding document:", error);
+    }
+  };
 
-export default function App() {
-  const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
-    const cellValue = user[columnKey as keyof User];
+  const renderCell = React.useCallback((doc: any, columnKey: React.Key) => {
+    const cellValue = doc[columnKey as keyof typeof doc];
 
     switch (columnKey) {
-      case "name":
+      case "title":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
-            <p className="text-bold text-sm capitalize text-default-400">
-              {user.team}
-            </p>
           </div>
         );
 
       case "owner":
         return (
           <User
-            avatarProps={{ radius: "lg", src: user.avatar }}
-            description={user.email}
+            avatarProps={{ radius: "lg", src: doc.avatar }}
+            description={doc.email}
             name={cellValue}
-          >
-            {user.email}
-          </User>
+          />
         );
 
       case "actions":
@@ -291,7 +114,7 @@ export default function App() {
                 <EyeIcon />
               </span>
             </Tooltip>
-            <Tooltip content="Edit user">
+            <Tooltip content="Edit">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <EditIcon />
               </span>
@@ -303,6 +126,7 @@ export default function App() {
             </Tooltip>
           </div>
         );
+
       default:
         return cellValue;
     }
@@ -313,21 +137,32 @@ export default function App() {
       {/* Header Row */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-semibold">Document Management</h1>
-        <Button color="primary" className="flex" endContent={<PlusIcon />}>
+        <Button
+          className="flex"
+          color="primary"
+          endContent={<PlusIcon />}
+          onPress={handleAddDocument}
+        >
           Add New
         </Button>
       </div>
-      <Table aria-label="Example table with custom cells">
-        <TableHeader columns={columns}>
+      <Table aria-label="Document Table">
+        <TableHeader
+          columns={[
+            { name: "TITLE", uid: "title" },
+            { name: "OWNER", uid: "owner" },
+            { name: "ACTIONS", uid: "actions", align: "end" },
+          ]}
+        >
           {(column) => (
             <TableColumn key={column.uid} align={column.align || "start"}>
               {column.name}
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={users}>
+        <TableBody items={documents}>
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item._id}>
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}

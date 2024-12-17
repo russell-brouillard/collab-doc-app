@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { DocumentsModule } from './documents/documents.module';
 
 // Import other modules as needed
 
@@ -25,7 +26,9 @@ import { AppService } from './app.service';
       }),
       inject: [ConfigService],
     }),
+    DocumentsModule,
   ],
+
   controllers: [AppController],
   providers: [AppService],
 })
