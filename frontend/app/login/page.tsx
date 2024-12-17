@@ -1,17 +1,16 @@
 "use client";
 
 import React from "react";
-import { Button, Card, CardHeader, CardBody} from "@nextui-org/react";
-import { signIn } from "next-auth/react";
+import { Button, Card, CardHeader, CardBody } from "@nextui-org/react";
 
 export default function LoginPage() {
   const handleSignIn = () => {
-    signIn();
+    console.log("Sign in with Auth0");
   };
 
   const handleSignUp = () => {
     // Redirect to Auth0's sign-up page by specifying the screen_hint parameter
-    signIn("auth0", { callbackUrl: "/", screen_hint: "signup" });
+    console.log("Sign up with Auth0");
   };
 
   return (

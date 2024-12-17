@@ -2,7 +2,6 @@
 
 "use client";
 
-import { useSession, signIn, signOut } from "next-auth/react";
 import {
   Navbar,
   NavbarBrand,
@@ -30,8 +29,6 @@ export const AcmeLogo = () => {
 };
 
 export default function MyNavbar() {
-  const { data: session, status } = useSession();
-
   // Handle loading state
   if (status === "loading") {
     return (
@@ -105,18 +102,15 @@ export default function MyNavbar() {
               as="button"
               className="transition-transform"
               color="secondary"
-              name={session?.user?.name || "User"}
+              name={"User"}
               size="sm"
-              src={
-                session?.user?.image ||
-                "https://i.pravatar.cc/150?u=a042581f4e29026704d"
-              }
+              src={"https://i.pravatar.cc/150?u=a042581f4e29026704d"}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem key="profile" className="h-14 gap-2">
               <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">{session?.user?.email}</p>
+              <p className="font-semibold">email</p>
             </DropdownItem>
             <DropdownItem key="settings">My Settings</DropdownItem>
             <DropdownItem key="team_settings">Team Settings</DropdownItem>

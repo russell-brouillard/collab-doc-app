@@ -12,7 +12,6 @@ import {
   CardFooter,
   Link,
 } from "@nextui-org/react";
-import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   return (
@@ -30,9 +29,7 @@ export default function LoginPage() {
             gap: "1rem",
           }}
           validationBehavior="aria"
-          onSubmit={() =>
-            signIn("auth0", { callbackUrl: "/", screen_hint: "signup" })
-          }
+          onSubmit={() => console.log("Sign up with Auth0")}
         >
           <Input
             label="Username"
