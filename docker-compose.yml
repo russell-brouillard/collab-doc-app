@@ -37,6 +37,7 @@ services:
       - db
 
   frontend:
+    platform: linux/amd64
     build:
       context: ./frontend
       dockerfile: Dockerfile

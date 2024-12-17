@@ -11,13 +11,11 @@ import {
 } from "@nextui-org/react";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
-
 export default function MyNavbar() {
   return (
     <Navbar isBordered variant="sticky">
       {/* Brand Section */}
       <NavbarBrand>
-
         <p className="font-bold text-inherit ml-2">ACME</p>
       </NavbarBrand>
 
