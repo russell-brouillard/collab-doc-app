@@ -1,6 +1,6 @@
 "use client";
 
-import React, { SVGProps } from "react";
+import React, { SVGProps, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -12,6 +12,7 @@ import {
   Tooltip,
   Button,
 } from "@nextui-org/react";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
@@ -108,6 +109,32 @@ export const users = [
 ];
 
 export const EyeIcon = (props: IconSvgProps) => {
+  const { user } = useUser();
+  const auth = useAuth();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log("auth.getToken:", await auth.getToken());
+        const res = await fetch("http://localhost:3001/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${await auth.getToken()}`,
+          },
+        });
+
+        console.log(
+          "Server message:",
+          res.ok ? await res.text() : res.statusText
+        );
+      } catch (error) {
+        console.error("Error fetching server message:", error);
+      }
+    };
+
+    fetchData();
+  }, [user]);
+  
   return (
     <svg
       aria-hidden="true"
