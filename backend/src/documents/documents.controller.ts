@@ -1,8 +1,16 @@
-// backend/src/documents/documents.controller.ts
-
-import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Put,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
+import { UpdateDocumentDto } from './dto/update-document.dto';
 import { ClerkAuthGuard } from 'src/clerk/clerk.guard';
 
 @Controller('documents')
@@ -27,5 +35,18 @@ export class DocumentsController {
     return this.documentsService.findOne(id);
   }
 
-  // Add update and delete endpoints as needed
+  @UseGuards(ClerkAuthGuard)
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateDocumentDto: UpdateDocumentDto,
+  ) {
+    return this.documentsService.update(id, updateDocumentDto);
+  }
+
+  @UseGuards(ClerkAuthGuard)
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    return this.documentsService.delete(id);
+  }
 }

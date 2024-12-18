@@ -1,23 +1,13 @@
-//frontend/app/documents/[...id]/page.tsx
-
 "use client";
 
 import React, { use, useEffect, useState } from "react";
 import { Textarea, Button } from "@nextui-org/react";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 
 const API_URL = "http://localhost:3001/documents";
 
-export default function Page({
-  params,
-  // searchParams,
-}: {
-  params: Promise<{ id: string }>;
-  // searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}) {
+export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  // const { query } = use(searchParams)
-
   const { getToken } = useAuth();
 
   const [content, setContent] = useState("");
@@ -42,13 +32,35 @@ export default function Page({
 
       if (res.ok) {
         const data = await res.json();
-
         setContent(data.content);
       } else {
         console.error("Failed to fetch document:", res.statusText);
       }
     } catch (error) {
       console.error("Error fetching document:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveDocument = async () => {
+    setLoading(true);
+    try {
+      const token = await getToken();
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ content }),
+      });
+
+      if (!res.ok) {
+        console.error("Failed to save document:", res.statusText);
+      }
+    } catch (error) {
+      console.error("Error saving document:", error);
     } finally {
       setLoading(false);
     }
@@ -64,14 +76,14 @@ export default function Page({
         rows={10}
         disabled={loading}
       />
-      <Button
-        className="mt-4"
-        color="primary"
-        onPress={fetchDocument}
-        disabled={loading}
-      >
-        Refresh
-      </Button>
+      <div className="mt-4 flex space-x-4">
+        <Button color="primary" onPress={fetchDocument} disabled={loading}>
+          Refresh
+        </Button>
+        <Button color="success" onPress={saveDocument} disabled={loading}>
+          Save
+        </Button>
+      </div>
     </div>
   );
 }

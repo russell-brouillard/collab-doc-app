@@ -1,11 +1,10 @@
-// backend/src/documents/documents.service.ts
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CollabDocument, DocumentDocument } from './schemas/document.schema';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { clerkClient } from '@clerk/express';
+import { UpdateDocumentDto } from './dto/update-document.dto';
 
 @Injectable()
 export class DocumentsService {
@@ -29,10 +28,6 @@ export class DocumentsService {
     for (const doc of documents) {
       try {
         const user = await clerkClient.users.getUser(doc.owner);
-        console.log(doc.owner);
-        console.log(user.emailAddresses);
-
-        // Attach user data to the document
         doc.user = user;
       } catch (error) {
         console.error(`Error fetching user for document ${doc._id}:`, error);
@@ -54,5 +49,24 @@ export class DocumentsService {
     return document;
   }
 
-  // Implement update and delete methods as needed
+  async update(
+    id: string,
+    updateDocumentDto: UpdateDocumentDto,
+  ): Promise<CollabDocument> {
+    const updatedDocument = await this.documentModel
+      .findByIdAndUpdate(id, updateDocumentDto, { new: true })
+      .exec();
+
+    if (!updatedDocument) {
+      throw new NotFoundException(`Document with ID ${id} not found`);
+    }
+    return updatedDocument;
+  }
+
+  async delete(id: string): Promise<void> {
+    const result = await this.documentModel.findByIdAndDelete(id).exec();
+    if (!result) {
+      throw new NotFoundException(`Document with ID ${id} not found`);
+    }
+  }
 }
