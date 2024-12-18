@@ -35,23 +35,20 @@ export default function MyNavbar() {
       </NavbarBrand>
 
       {/* Navigation Links */}
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <NextUILink color="foreground" href="documents">
-            Documents
-          </NextUILink>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <NextUILink aria-current="page" color="secondary" href="edit">
-            Edit
-          </NextUILink>
-        </NavbarItem>
-        <NavbarItem>
-          <NextUILink color="foreground" href="users">
-            Users
-          </NextUILink>
-        </NavbarItem>
-      </NavbarContent>
+      <SignedIn>
+        <NavbarContent className="hidden sm:flex gap-4" justify="center">
+          <NavbarItem>
+            <NextUILink color="foreground" href="/documents">
+              Documents
+            </NextUILink>
+          </NavbarItem>
+          <NavbarItem>
+            <NextUILink color="foreground" href="users">
+              Users
+            </NextUILink>
+          </NavbarItem>
+        </NavbarContent>
+      </SignedIn>
 
       {/* Authentication Section */}
       <NavbarContent as="div" justify="end" className="flex items-center gap-4">

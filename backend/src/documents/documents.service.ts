@@ -3,8 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CollabDocument, DocumentDocument } from './schemas/document.schema';
 import { CreateDocumentDto } from './dto/create-document.dto';
-import { clerkClient } from '@clerk/express';
+import { clerkClient, User } from '@clerk/express';
 import { UpdateDocumentDto } from './dto/update-document.dto';
+import { PaginatedResourceResponse } from '@clerk/backend/dist/api/resources/Deserializer';
 
 @Injectable()
 export class DocumentsService {
@@ -35,6 +36,10 @@ export class DocumentsService {
     }
 
     return documents;
+  }
+
+  async findAllUsers(): Promise<PaginatedResourceResponse<User[]>> {
+    return await clerkClient.users.getUserList();
   }
 
   async findOne(id: string): Promise<CollabDocument> {

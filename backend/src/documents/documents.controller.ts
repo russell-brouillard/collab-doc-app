@@ -30,6 +30,13 @@ export class DocumentsController {
   }
 
   @UseGuards(ClerkAuthGuard)
+  @Get('users')
+  async findAllUsers() {
+    console.log('Finding all users');
+    return this.documentsService.findAllUsers();
+  }
+
+  @UseGuards(ClerkAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.documentsService.findOne(id);
