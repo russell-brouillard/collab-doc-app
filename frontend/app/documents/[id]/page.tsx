@@ -1,8 +1,9 @@
 "use client";
 
 import React, { use, useEffect, useState } from "react";
-import { Textarea, Button } from "@nextui-org/react";
+import { Textarea, Button, User } from "@nextui-org/react";
 import { useAuth } from "@clerk/nextjs";
+import UserDropDown from "@/components/userDropDown";
 
 const API_URL = "http://localhost:3001/documents";
 
@@ -69,6 +70,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   return (
     <div className="flex flex-col items-center p-8">
       <h1 className="text-2xl font-bold mb-4">Edit Document</h1>
+      <UserDropDown />
       <Textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
