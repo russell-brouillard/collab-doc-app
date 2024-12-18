@@ -12,6 +12,7 @@ import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { ClerkAuthGuard } from 'src/clerk/clerk.guard';
+import { UpdateCollaboratorsDto } from './dto/update-collab-document.dto';
 
 @Controller('documents')
 export class DocumentsController {
@@ -49,6 +50,18 @@ export class DocumentsController {
     @Body() updateDocumentDto: UpdateDocumentDto,
   ) {
     return this.documentsService.update(id, updateDocumentDto);
+  }
+
+  @UseGuards(ClerkAuthGuard)
+  @Put(':id/collaborators')
+  async updateCollaborators(
+    @Param('id') id: string,
+    @Body() updateCollaboratorsDto: UpdateCollaboratorsDto,
+  ) {
+    return this.documentsService.updateCollaborators(
+      id,
+      updateCollaboratorsDto,
+    );
   }
 
   @UseGuards(ClerkAuthGuard)

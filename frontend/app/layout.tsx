@@ -43,29 +43,27 @@ export default function RootLayout({
             fontSans.variable
           )}
         >
-          <div className="relative flex flex-col min-h-screen">
-            {/* Navigation Bar */}
-            <MyNavbar />
+          {/* Navigation Bar */}
+          <MyNavbar />
 
-            {/* Main Content */}
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-              {children}
-            </main>
+          {/* Main Content */}
+          <main className="container mx-auto w-full max-w-screen-xl pt-16 px-8 flex-grow">
+            {children}
+          </main>
 
-            {/* Footer */}
-            <footer className="w-full flex items-center justify-center py-3">
-              <a
-                aria-label="Twitter"
-                className="flex items-center"
-                href={siteConfig.links.twitter}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <TwitterIcon className="text-default-500 w-6 h-6" />
-                <span className="sr-only">Twitter</span>
-              </a>
-            </footer>
-          </div>
+          {/* Footer */}
+          <footer className="w-full px-8 py-6 flex items-center justify-center">
+            <a
+              aria-label="Twitter"
+              className="flex items-center"
+              href={siteConfig.links.twitter}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <TwitterIcon className="text-default-500 w-6 h-6" />
+              <span className="sr-only">Twitter</span>
+            </a>
+          </footer>
         </body>
       </html>
     </ClerkProvider>

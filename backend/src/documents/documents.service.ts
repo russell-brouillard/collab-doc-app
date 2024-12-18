@@ -6,6 +6,7 @@ import { CreateDocumentDto } from './dto/create-document.dto';
 import { clerkClient, User } from '@clerk/express';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { PaginatedResourceResponse } from '@clerk/backend/dist/api/resources/Deserializer';
+import { UpdateCollaboratorsDto } from './dto/update-collab-document.dto';
 
 @Injectable()
 export class DocumentsService {
@@ -73,5 +74,23 @@ export class DocumentsService {
     if (!result) {
       throw new NotFoundException(`Document with ID ${id} not found`);
     }
+  }
+
+  async updateCollaborators(
+    id: string,
+    { collaborators }: UpdateCollaboratorsDto,
+  ): Promise<CollabDocument> {
+    const updatedDocument = await this.documentModel
+      .findByIdAndUpdate(
+        id,
+        { $set: { collaborators } },
+        { new: true, runValidators: true },
+      )
+      .exec();
+
+    if (!updatedDocument) {
+      throw new NotFoundException(`Document with ID ${id} not found`);
+    }
+    return updatedDocument;
   }
 }

@@ -1,5 +1,3 @@
-// frontend/components/MyNavbar.tsx
-
 "use client";
 
 import {
@@ -11,8 +9,6 @@ import {
   Navbar,
   NavbarBrand,
   NavbarContent,
-  NavbarItem,
-  Link as NextUILink,
 } from "@nextui-org/react";
 import {
   SignInButton,
@@ -27,31 +23,17 @@ export default function MyNavbar() {
 
   return (
     <Navbar isBordered>
-      {/* Brand Section */}
-      <NavbarBrand>
-        <p className="font-bold text-inherit ml-2">
-          <a href="/">Doc-Collab</a>
-        </p>
-      </NavbarBrand>
+      {/* Brand Section on the Far Left */}
+      <NavbarContent justify="start" className="flex items-center">
+        <NavbarBrand>
+          <p className="font-bold text-inherit ml-2">
+            <a href="/">Doc-Collab</a>
+          </p>
+        </NavbarBrand>
+      </NavbarContent>
 
-      {/* Navigation Links */}
-      <SignedIn>
-        <NavbarContent className="hidden sm:flex gap-4" justify="center">
-          <NavbarItem>
-            <NextUILink color="foreground" href="/documents">
-              Documents
-            </NextUILink>
-          </NavbarItem>
-          <NavbarItem>
-            <NextUILink color="foreground" href="users">
-              Users
-            </NextUILink>
-          </NavbarItem>
-        </NavbarContent>
-      </SignedIn>
-
-      {/* Authentication Section */}
-      <NavbarContent as="div" justify="end" className="flex items-center gap-4">
+      {/* Authentication Section on the Far Right */}
+      <NavbarContent justify="end" className="flex items-center gap-4">
         {/* Show Sign In button when signed out */}
         <SignedOut>
           <SignInButton mode="modal">
@@ -86,7 +68,6 @@ export default function MyNavbar() {
               <DropdownItem key="profile" href="profile">
                 My Settings
               </DropdownItem>
-
               <DropdownItem key="logout" color="danger">
                 <SignOutButton />
               </DropdownItem>

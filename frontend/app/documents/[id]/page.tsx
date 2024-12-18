@@ -1,8 +1,9 @@
 "use client";
 
 import React, { use, useEffect, useState } from "react";
-import { Textarea, Button, User } from "@nextui-org/react";
+import { Textarea } from "@nextui-org/react";
 import { useAuth } from "@clerk/nextjs";
+
 import UserDropDown from "@/components/userDropDown";
 
 const API_URL = "http://localhost:3001/documents";
@@ -19,6 +20,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       fetchDocument();
     }
   }, [id]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (content && !loading) {
+        saveDocument();
+      }
+    }, 1000); // Auto-save after 1 second of inactivity
+
+    return () => clearTimeout(timeout);
+  }, [content]);
 
   const fetchDocument = async () => {
     setLoading(true);
@@ -68,23 +79,21 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   };
 
   return (
-    <div className="flex flex-col items-center p-8">
-      <h1 className="text-2xl font-bold mb-4">Edit Document</h1>
-      <UserDropDown />
-      <Textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        fullWidth
-        rows={10}
-        disabled={loading}
-      />
-      <div className="mt-4 flex space-x-4">
-        <Button color="primary" onPress={fetchDocument} disabled={loading}>
-          Refresh
-        </Button>
-        <Button color="success" onPress={saveDocument} disabled={loading}>
-          Save
-        </Button>
+    <div className="flex flex-col items-center h-full">
+      <div className="flex justify-between w-full mb-4">
+        <h1 className="text-2xl font-bold mb-4">Edit Document</h1>
+
+        <UserDropDown id={id} />
+      </div>
+
+      <div className="h-full w-full">
+        <Textarea
+          fullWidth
+          disabled={loading}
+          rows={10}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
       </div>
     </div>
   );
