@@ -118,11 +118,13 @@ export default function Documents() {
       case "actions":
         return (
           <div className="flex justify-end gap-2">
-            <Tooltip content="Details">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <EyeIcon />
-              </span>
-            </Tooltip>
+            <a href={`/documents/${doc._id}`}>
+              <Tooltip content="Details">
+                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                  <EyeIcon />
+                </span>
+              </Tooltip>
+            </a>
             <Tooltip content="Edit">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <EditIcon />
