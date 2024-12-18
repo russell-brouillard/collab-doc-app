@@ -4,6 +4,7 @@
 
 import React, { use, useEffect, useState } from "react";
 import { Textarea, Button } from "@nextui-org/react";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 const API_URL = "http://localhost:3001/documents";
 
@@ -17,10 +18,10 @@ export default function Page({
   const { id } = use(params);
   // const { query } = use(searchParams)
 
+  const { getToken } = useAuth();
+
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
-
-  console.log("Document ID:", id);
 
   useEffect(() => {
     if (id) {
@@ -31,7 +32,13 @@ export default function Page({
   const fetchDocument = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/${id}`);
+      const token = await getToken();
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (res.ok) {
         const data = await res.json();
