@@ -1,13 +1,15 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useState, useRef } from "react";
 import { Textarea } from "@nextui-org/react";
 import { useAuth } from "@clerk/nextjs";
+import { io } from "socket.io-client";
 
 import UserDropDown from "@/components/userDropDown";
 import DocName from "@/components/docName";
 
 const API_URL = "http://localhost:3001/documents";
+const SOCKET_URL = "http://localhost:3001"; // Your Socket.io endpoint
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -17,6 +19,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [loading, setLoading] = useState(false);
   const [docTitle, setDocTitle] = useState("");
 
+  const socketRef = useRef<any>(null);
+
   useEffect(() => {
     if (id) {
       fetchDocument();
@@ -24,11 +28,43 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   }, [id]);
 
   useEffect(() => {
+    // Connect to the socket when the component mounts
+    // Only do this if we have an id
+    if (id) {
+      const socket = io(SOCKET_URL, {
+        transports: ["websocket"],
+      });
+      socketRef.current = socket;
+
+      // Join the document room
+      socket.emit("joinDocument", { documentId: id });
+
+      // Listen for updates from other users
+      socket.on(
+        "documentContentUpdated",
+        (data: { documentId: string; content: string }) => {
+          if (data.documentId === id) {
+            // Update content as soon as another client changes it
+            setContent(data.content);
+          }
+        }
+      );
+
+      return () => {
+        socket.emit("leaveDocument", { documentId: id });
+        socket.off("documentContentUpdated");
+        socket.disconnect();
+      };
+    }
+  }, [id]);
+
+  // Auto-save after 1 second of inactivity
+  useEffect(() => {
     const timeout = setTimeout(() => {
       if (content && !loading) {
         saveDocument();
       }
-    }, 1000); // Auto-save after 1 second of inactivity
+    }, 1000);
 
     return () => clearTimeout(timeout);
   }, [content]);
@@ -46,8 +82,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
       if (res.ok) {
         const data = await res.json();
-
-        console.log("Document data:", data);
         setContent(data.content);
         setDocTitle(data.title);
       } else {
@@ -83,6 +117,19 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newContent = e.target.value;
+    setContent(newContent);
+
+    // Emit the change to other connected clients
+    if (socketRef.current) {
+      socketRef.current.emit("updateDocumentContent", {
+        documentId: id,
+        content: newContent,
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col items-center h-full">
       <h1 className="text-2xl font-bold mb-4">Edit Document</h1>
@@ -97,7 +144,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           disabled={loading}
           rows={10}
           value={content || ""}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={handleChange}
         />
       </div>
     </div>

@@ -1,9 +1,9 @@
-// documents.module.ts
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DocumentsService } from './documents.service';
 import { DocumentsController } from './documents.controller';
 import { DocumentSchema } from './schemas/document.schema';
+import { DocumentsGateway } from './documents.gateway';
 
 @Module({
   imports: [
@@ -12,7 +12,7 @@ import { DocumentSchema } from './schemas/document.schema';
     ]),
   ],
   controllers: [DocumentsController],
-  providers: [DocumentsService],
+  providers: [DocumentsService, DocumentsGateway],
   exports: [DocumentsService],
 })
 export class DocumentsModule {}
