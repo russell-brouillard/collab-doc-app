@@ -69,6 +69,7 @@ export default function DocName({ name, id }: DocNameProps) {
       <Input
         label="Name"
         value={docName}
+        variant="bordered"
         onChange={(e) => setDocName((e.target as HTMLInputElement).value)}
       />
       <Button

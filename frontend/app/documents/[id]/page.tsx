@@ -133,22 +133,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   return (
     <div className="flex flex-col items-center h-full">
       <h1 className="text-2xl font-bold mb-4">Edit Document</h1>
-      <div className="flex justify-between w-full mb-4">
+
+      {/* For small screens: stack vertically; for medium screens and up: display in a row */}
+      <div className="flex flex-col w-full mb-4 space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0 md:space-x-4">
         <DocName id={id} name={docTitle} />
         <UserDropDown id={id} />
       </div>
-
-      {/* <div className="h-full w-full">
-        <Textarea
-          fullWidth
-          disabled={loading}
-          rows={10}
-          value={content || ""}
-          onChange={handleChange}
-          variant="bordered"
-          className="h-full"
-        />
-      </div> */}
 
       <div className="h-screen w-full">
         <textarea
