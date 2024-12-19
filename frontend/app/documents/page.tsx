@@ -59,8 +59,6 @@ export default function Documents() {
     try {
       const token = await getToken();
 
-      console.log("Adding new document...");
-      console.log("User:", user);
       const newDocument = {
         title: "New Document",
         content: "Document content goes here.",
@@ -87,6 +85,30 @@ export default function Documents() {
       }
     } catch (error) {
       console.error("Error adding document:", error);
+    }
+  };
+
+  const handleDeleteDocument = async (id: string) => {
+    try {
+      const token = await getToken();
+
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        // Remove the deleted document from the state
+        setDocuments((prevDocs) => prevDocs.filter((doc) => doc._id !== id));
+        console.log("Document deleted successfully");
+      } else {
+        console.error("Failed to delete document:", res.statusText);
+      }
+    } catch (error) {
+      console.error("Error deleting document:", error);
     }
   };
 
@@ -118,20 +140,18 @@ export default function Documents() {
       case "actions":
         return (
           <div className="flex justify-end gap-2">
-            <a href={`/documents/${doc._id}`}>
-              <Tooltip content="Details">
-                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                  <EyeIcon />
-                </span>
-              </Tooltip>
-            </a>
             <Tooltip content="Edit">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <EditIcon />
-              </span>
+              <a href={`/documents/${doc._id}`}>
+                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                  <EditIcon />
+                </span>
+              </a>
             </Tooltip>
-            <Tooltip color="danger" content="Delete user">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
+            <Tooltip color="danger" content="Delete">
+              <span
+                onClick={() => handleDeleteDocument(doc._id)}
+                className="text-lg text-danger cursor-pointer active:opacity-50"
+              >
                 <DeleteIcon />
               </span>
             </Tooltip>
