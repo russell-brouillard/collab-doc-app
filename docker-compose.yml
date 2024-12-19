@@ -52,7 +52,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ./src:/app/src 
+      - ./frontend:/app
       - /app/node_modules 
     command: yarn dev
     depends_on:

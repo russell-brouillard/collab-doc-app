@@ -89,20 +89,12 @@ export default function UserDropDown({ id }: { id: string }) {
 
   return (
     <div className="flex items-center gap-4">
-      <Button
-        color="primary"
-        isDisabled={selectedUsers.length === 0}
-        variant="ghost"
-        onPress={handleSaveSelectedUsers}
-      >
-        Save
-      </Button>
       <Select
+        isMultiline
         classNames={{
-          base: "w-[16rem] max-w-full",
+          base: "w-[18rem] max-w-full",
           trigger: "min-h-12 py-2",
         }}
-        isMultiline
         items={users}
         label="Add Collaborators"
         labelPlacement="outside"
@@ -157,6 +149,14 @@ export default function UserDropDown({ id }: { id: string }) {
           </SelectItem>
         )}
       </Select>
+      <Button
+        color="primary"
+        isDisabled={selectedUsers.length === 0}
+        variant="ghost"
+        onPress={handleSaveSelectedUsers}
+      >
+        Save
+      </Button>
     </div>
   );
 }
