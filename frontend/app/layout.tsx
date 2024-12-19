@@ -7,7 +7,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { TwitterIcon } from "@/components/icons";
+
 import MyNavbar from "@/components/myNavbar";
 
 export const metadata: Metadata = {
@@ -52,18 +52,7 @@ export default function RootLayout({
           </main>
 
           {/* Footer */}
-          <footer className="w-full px-8 py-6 flex items-center justify-center">
-            <a
-              aria-label="Twitter"
-              className="flex items-center"
-              href={siteConfig.links.twitter}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <TwitterIcon className="text-default-500 w-6 h-6" />
-              <span className="sr-only">Twitter</span>
-            </a>
-          </footer>
+          <footer className="w-full px-8 py-6 flex items-center justify-center"></footer>
         </body>
       </html>
     </ClerkProvider>

@@ -64,6 +64,16 @@ export class DocumentsController {
     );
   }
 
+  // New endpoint for updating the document name
+  @UseGuards(ClerkAuthGuard)
+  @Put(':id/docName')
+  async updateDocName(
+    @Param('id') id: string,
+    @Body() body: { docName: string },
+  ) {
+    return this.documentsService.updateDocName(id, body.docName);
+  }
+
   @UseGuards(ClerkAuthGuard)
   @Delete(':id')
   async delete(@Param('id') id: string) {

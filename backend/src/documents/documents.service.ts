@@ -93,4 +93,21 @@ export class DocumentsService {
     }
     return updatedDocument;
   }
+
+  // New method to update the docName/title
+  async updateDocName(id: string, docName: string): Promise<CollabDocument> {
+    const updatedDocument = await this.documentModel
+      .findByIdAndUpdate(
+        id,
+        { title: docName },
+        { new: true, runValidators: true },
+      )
+      .exec();
+
+    if (!updatedDocument) {
+      throw new NotFoundException(`Document with ID ${id} not found`);
+    }
+
+    return updatedDocument;
+  }
 }
