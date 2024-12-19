@@ -20,13 +20,16 @@ export class DocumentsService {
     return createdDocument.save();
   }
 
-  async findAll(): Promise<CollabDocument[]> {
+  async findAll(userId: string): Promise<CollabDocument[]> {
     const documents = await this.documentModel
-      .find()
+      .find({
+        $or: [{ owner: userId }, { collaborators: userId }],
+      })
       .populate('collaborators')
       .populate('owner')
       .exec();
 
+    // Attach user information if available
     for (const doc of documents) {
       try {
         const user = await clerkClient.users.getUser(doc.owner);

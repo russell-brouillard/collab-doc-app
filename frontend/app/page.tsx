@@ -17,13 +17,15 @@ export default function Home() {
       <SignedOut>
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
           <div className="inline-block max-w-xl text-center justify-center">
-            <span className={title({ color: "violet" })}>beautiful&nbsp;</span>
+            <span className={title({ color: "violet" })}>
+              Collaborate&nbsp;
+            </span>
             <br />
             <span className={title()}>
-              websites regardless of your design experience.
+              on documents in real-time, from anywhere.
             </span>
             <div className={subtitle({ class: "mt-4" })}>
-              Beautiful, fast and modern React UI library.
+              Share ideas, edit content, and work together seamlessly.
             </div>
           </div>
 

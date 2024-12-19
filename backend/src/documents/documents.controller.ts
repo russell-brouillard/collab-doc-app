@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
@@ -26,8 +27,10 @@ export class DocumentsController {
 
   @UseGuards(ClerkAuthGuard)
   @Get()
-  async findAll() {
-    return this.documentsService.findAll();
+  async findAll(@Req() req): Promise<any> {
+    const userId = req.user?.userId;
+
+    return this.documentsService.findAll(userId);
   }
 
   @UseGuards(ClerkAuthGuard)

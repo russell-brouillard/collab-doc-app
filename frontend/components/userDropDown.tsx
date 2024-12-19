@@ -99,7 +99,7 @@ export default function UserDropDown({ id }: { id: string }) {
       </Button>
       <Select
         classNames={{
-          base: "max-w-lg",
+          base: "w-[16rem] max-w-full",
           trigger: "min-h-12 py-2",
         }}
         isMultiline
