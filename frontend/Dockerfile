@@ -4,7 +4,7 @@ FROM node:20-bullseye-slim
 WORKDIR /app
 
 # Install dependencies
-COPY package.json yarn.lock ./
+COPY package.json ./
 RUN yarn
 
 RUN yarn add next
