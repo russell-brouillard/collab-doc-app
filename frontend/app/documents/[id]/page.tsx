@@ -152,8 +152,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
       <div className="h-screen w-full">
         <textarea
+          className="h-full w-full resize-none border-2 border-gray-300 rounded-lg p-4"
           value={content || ""}
-          className="h-full w-full resize-none"
           onChange={handleChange}
         />
       </div>
