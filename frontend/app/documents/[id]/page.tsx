@@ -138,12 +138,22 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         <UserDropDown id={id} />
       </div>
 
-      <div className="h-full w-full">
+      {/* <div className="h-full w-full">
         <Textarea
           fullWidth
           disabled={loading}
           rows={10}
           value={content || ""}
+          onChange={handleChange}
+          variant="bordered"
+          className="h-full"
+        />
+      </div> */}
+
+      <div className="h-screen w-full">
+        <textarea
+          value={content || ""}
+          className="h-full w-full resize-none"
           onChange={handleChange}
         />
       </div>
