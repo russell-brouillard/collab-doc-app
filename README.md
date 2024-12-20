@@ -49,7 +49,7 @@ A real-time collaborative document editing application built with Next.js (front
 git clone https://github.com/your-username/collab-doc-app.git
 cd collab-doc-app
 
-docker compose up --build
+docker compose down -v && docker compose up --build
 ```
 
 ### Access the Applications
