@@ -1,7 +1,6 @@
 # collab-doc-app/.gitignore
 
-# Environment Variables
-.env
+
 
 # Node Modules
 node_modules/
