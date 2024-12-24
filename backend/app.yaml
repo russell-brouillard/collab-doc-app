@@ -2,7 +2,7 @@
 runtime: nodejs18
 env: standard
 
-service: backend
+service: default
 
 handlers:
   - url: /.*

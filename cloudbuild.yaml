@@ -1,4 +1,9 @@
 # cloudbuild.yaml
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+  
 steps:
   # Install dependencies and build frontend
   - name: 'gcr.io/cloud-builders/npm'
