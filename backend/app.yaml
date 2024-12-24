@@ -1,0 +1,18 @@
+# backend/app.yaml
+runtime: nodejs18
+env: standard
+
+service: backend
+
+handlers:
+  - url: /.*
+    secure: always
+    script: auto
+
+env_variables:
+  NODE_ENV: production
+  MONGO_URI: "mongodb+srv://rssllbrllrd:<db_password>@superiorlandscaping.nw54g.mongodb.net/?retryWrites=true&w=majority&appName=superiorlandscaping"  # Replace with your actual connection string
+  CLERK_PUBLISHABLE_KEY: "pk_test_Z3Jvd2luZy1zdGluZ3JheS0xNy5jbGVyay5hY2NvdW50cy5kZXYk"
+  CLERK_SECRET_KEY: "sk_test_SXpmibrgotxAWhYftmeVR78jGsGuspRfqwrALJmoDN"
+
+

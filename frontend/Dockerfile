@@ -1,16 +1,20 @@
+# frontend/Dockerfile
 FROM node:20-bullseye-slim
 
 # Set working directory
 WORKDIR /app
 
-# Install dependencies
+# Copy package.json and yarn.lock
 COPY package.json yarn.lock ./
-RUN yarn
 
-RUN yarn add next
+# Install dependencies
+RUN yarn install --frozen-lockfile
 
-# Copy the entire project
-COPY . .
+# Build the Next.js application
+RUN yarn build
 
-# Expose the port for Next.js
+# Expose the frontend port
 EXPOSE 3000
+
+# Start the frontend
+CMD ["yarn", "start"]  # Use 'start' for production

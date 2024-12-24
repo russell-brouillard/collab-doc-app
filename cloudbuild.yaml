@@ -1,0 +1,29 @@
+# cloudbuild.yaml
+steps:
+  # Install dependencies and build frontend
+  - name: 'gcr.io/cloud-builders/npm'
+    dir: 'frontend'
+    args: ['install']
+  
+  - name: 'gcr.io/cloud-builders/npm'
+    dir: 'frontend'
+    args: ['run', 'build']  # Ensure you have a "build" script in frontend/package.json
+  
+  # Deploy Frontend to App Engine
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['app', 'deploy', 'frontend/app.yaml', '--quiet']
+  
+  # Install dependencies and build backend
+  - name: 'gcr.io/cloud-builders/npm'
+    dir: 'backend'
+    args: ['install']
+  
+  - name: 'gcr.io/cloud-builders/npm'
+    dir: 'backend'
+    args: ['run', 'build']  # Ensure you have a "build" script in backend/package.json
+  
+  # Deploy Backend to App Engine
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['app', 'deploy', 'backend/app.yaml', '--quiet']
+
+timeout: '1200s'  # Adjust based on build time requirements
